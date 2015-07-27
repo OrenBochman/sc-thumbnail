@@ -1,0 +1,144 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
+The complete set of authors may be found at http://polymer.github.io/AUTHORS
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+-->
+<link rel="import" href="../polymer/polymer.html" />
+
+<dom-module id="sc-thumbnail">
+
+  <style>
+    img {
+      width: 140px;
+      cursor: pointer;
+    }
+    :host[small] img {
+      width: 115px;
+    }
+    :host[max-height] img {
+      width: auto;
+      height: 100px;
+    }
+    :host[small][max-height] img {
+      height: 80px;
+    }
+    img[loading], img[failed] {
+      height: 100px;
+      background-color: #eeeeee;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+    :host[small] img[loading], :host[small] img[failed] {
+      height: 80px;
+    }
+    :host[max-height] img[loading], :host[max-height] img[failed] {
+      width: 140px;
+    }
+    :host[small][max-height] img[loading], :host[small][max-height] img[failed] {
+      width: 115px;
+    }
+  </style>
+
+  <template>
+    <img loading$="[[isLoading(status)]]" failed$="[[isFailed(status)]]" src$="[[src]]" style$="[[backgroundImage(status, loadingImage)]]" on-tap="view">
+  </template>
+
+</dom-module>
+
+<script>
+(function () {
+  window.Polymer({
+    is: 'sc-thumbnail',
+
+    properties: {
+      status: {
+        type: String,
+        value: 'loading'
+      },
+      url: {
+        type: String,
+        value: ''
+      },
+      src: {
+        type: String,
+        value: '',
+        readOnly: true
+      },
+      originalUrl: {
+        type: String,
+        value: ''
+      },
+      loadingImage: {
+        type: String,
+        /* jshint ignore:start */ // jscs:disable
+        value: 'data:image/gif;base64,R0lGODlhEAAQAPUAAO7u7jWLZuLn5XGrkjWLZrnRxufq6dDd2Nji3n6ynDqNab/Vy22pj9Xg20mVdFGaet3l4YO0n0yXd2eliqPFtpC8qcfZ0ZrBsLDMwOzt7Mvb1Ja+rXmvmESScYe2osPWznatlZ7Ds6vKvWKih1acflqegajIuou5pT+QbV6hhLTOwwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAAGo0CA0IDJAAhIR0YgbDYmhAKggyQIDp/mwYGcADzIEGDT0QgRjyrgQHAYIMiRgAmhII0EDGBUFQ0SCAAGD0YNAiJIAwtHSBUQGQZNCEZNVQQSTZkWEQpIChEWQpQAApYEmRkLgQAZGRpQSAALA0kQTQlCBSQlBZahDEIECotvBgxIwL1ZVYBCBxIEGgadIAAcSB0NWhdjahoEI9qZttexABiRQkEAIfkECQoAAAAsAAAAABAAEAAABmBAgBAgGhGEhJFoyGQQnsjniCk0PY+Aq4eZQACs2OfWcCI+vVbkWEEoXtHCtfR6ZhrYV6p+z9fTCVtDYFdGYgAGQmiEIoZ3SIptACNyUWgMdnhRBF5UJ3lZTwl7bkhKTEEAIfkECQoAAAAsAAAAABAAEAAABp1AgBAAGRGOQoxhKNRoAI8jAaAhjA7DQwcEWBy5HOnSwDh+MuUPQEp4FqQowGFqOA6ez8XgeMogAAgoZwAbXEN+TA0GKg5SChEWTEMgbJUFkgAWCQpsHRhMAggZTEYboxdDBkYEAwsABU8QKQSjIwACbCIZGRVScgSoF0cjAgAZHUcTAB5HAgIOHU9CEBMEl8gECRkf0qkYo1IMEExBADsAAAAAAAAAAAA='
+        /* jshint ignore:end */ // jscs:enable
+      }
+    },
+
+    observers: [
+      'ready(url)'
+    ],
+
+    isLoading: function (status) {
+      return !/complete|failed|loaded/.test(status);
+    },
+
+    isFailed: function (status) {
+      return status === 'failed';
+    },
+
+    backgroundImage: function (status, loadingImage) {
+      var image = 'none';
+      if (this.isLoading(status)) {
+        image = 'url('.concat(loadingImage, ')');
+      }
+      return 'background-image: '.concat(image);
+    },
+
+    ready: function () {
+      if (!this.url) {
+        return;
+      }
+
+      this.set('status', 'loading');
+
+      var img = new window.Image();
+
+      img.addEventListener('load', function () {
+        this.set('status', 'loaded');
+        this._setSrc(img.src);
+      }.bind(this));
+
+      img.addEventListener('error', function () {
+        this.set('status', 'failed');
+      }.bind(this));
+
+      img.src = this.url;
+    },
+
+    view: function (e) {
+      e.cancelBubble = true;
+
+      var url = this.originalUrl || this.url;
+
+      if (!url) {
+        return;
+      }
+
+      if (window.cordova && window.cordova.InAppBrowser) {
+        var options = 'location=no,hardwareback=yes';
+        window.cordova.InAppBrowser.open(url, '_blank', options);
+      }
+      else {
+        window.open(url);
+      }
+    }
+
+  });
+})();
+</script>
