@@ -12,6 +12,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="sc-thumbnail">
 
   <style>
+    a {
+      display: block;
+    }
     img {
       width: 140px;
     }
@@ -43,7 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
 
   <template>
-    <a href="javasript://" on-tap="view">
+    <a href="[[link(originalUrl, url)]]" target="_blank" onclick="if (window.cordova && window.cordova.InAppBrowser) return window.open(this.href, '_blank') && false;">
       <img loading$="[[isLoading(status)]]" failed$="[[isFailed(status)]]" src$="[[src]]" style$="[[backgroundImage(status, loadingImage)]]">
     </a>
   </template>
@@ -101,7 +104,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return 'background-image: '.concat(image);
     },
 
+    link: function (originalUrl, url) {
+      return originalUrl || url;
+    },
+
     ready: function () {
+
       if (!this.url) {
         return;
       }
@@ -123,24 +131,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }.bind(this));
 
       img.src = this.url;
-    },
-
-    view: function (e) {
-      e.cancelBubble = true;
-
-      var url = this.originalUrl || this.url;
-
-      if (!url) {
-        return;
-      }
-
-      if (window.cordova && window.cordova.InAppBrowser) {
-        var options = 'location=no,hardwareback=yes,EnableViewPortScale=yes';
-        window.cordova.InAppBrowser.open(url, '_blank', options);
-      }
-      else {
-        window.open(url);
-      }
     }
 
   });
