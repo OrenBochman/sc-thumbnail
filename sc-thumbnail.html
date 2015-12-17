@@ -117,20 +117,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       this.set('status', 'loading');
       this._setSrc('');
 
-      var img = new window.Image();
+      if (!this._img) {
+        this._img = new Image();
 
-      img.addEventListener('load', function () {
-        this.fire('load');
-        this.set('status', 'loaded');
-        this._setSrc(img.src);
-      }.bind(this));
+        this._img.addEventListener('load', function () {
+          this.fire('load');
+          this.set('status', 'loaded');
+          console.log('loaded', this.url);
+          this._setSrc(this.url);
+        }.bind(this));
 
-      img.addEventListener('error', function () {
-        this.fire('error');
-        this.set('status', 'failed');
-      }.bind(this));
+        this._img.addEventListener('error', function () {
+          this.fire('error');
+          this.set('status', 'failed');
+        }.bind(this));
+      }
 
-      img.src = this.url;
+      this._img.src = this.url;
     }
 
   });
