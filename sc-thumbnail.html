@@ -46,7 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
 
   <template>
-    <a href="[[link(originalUrl, url, status)]]" target="_blank" onclick="if (window.cordova && window.cordova.InAppBrowser) return this.href !== 'javascript://' && window.cordova.InAppBrowser.open(this.href, '_blank') && false;">
+    <a href="[[link(originalUrl, url, status)]]" target="_blank" onclick="if (window.cordova && window.cordova.InAppBrowser) return this.href !== 'javascript://' && window.cordova.InAppBrowser.open(this.href, '_blank', 'location=no') && false;">
       <img loading$="[[isLoading(status)]]" failed$="[[isFailed(status)]]" src$="[[src]]" style$="[[backgroundImage(status, loadingImage)]]">
     </a>
   </template>
