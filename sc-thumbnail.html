@@ -125,13 +125,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._img = new Image();
 
         this._img.addEventListener('load', function () {
-          this.fire('load');
+          this.fire('load', {}, { bubbles: false });
           this.set('status', 'loaded');
           this._setSrc(this.url);
         }.bind(this));
 
         this._img.addEventListener('error', function () {
-          this.fire('error');
+          this.fire('error', {}, { bubbles: false });
           this.set('status', 'failed');
         }.bind(this));
       }
