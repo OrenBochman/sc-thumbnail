@@ -46,7 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
 
   <template>
-    <a href="[[link(originalUrl, url, status)]]" target="_blank" onclick="return window.viewImage ? window.viewImage(this.href) : true;">
+    <a href="[[link(originalUrl, url, status)]]" onclick="return !window.viewImage || window.viewImage(this.href) && false;">
       <img loading$="[[isLoading(status)]]" failed$="[[isFailed(status)]]" src$="[[src]]" style$="[[backgroundImage(status, loadingImage)]]">
     </a>
   </template>
