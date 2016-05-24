@@ -115,7 +115,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     ready: function () {
 
-      if (!this.url) {
+      if (!this.url || this.url === this.src) {
         return;
       }
 
