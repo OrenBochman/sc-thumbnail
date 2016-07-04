@@ -10,42 +10,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html" />
 
 <dom-module id="sc-thumbnail">
-
-  <style>
-    a {
-      display: block;
-    }
-    img {
-      width: 140px;
-    }
-    :host[small] img {
-      width: 115px;
-    }
-    :host[max-height] img {
-      width: auto;
-      height: 100px;
-    }
-    :host[small][max-height] img {
-      height: 80px;
-    }
-    img[loading], img[failed] {
-      height: 100px;
-      background-color: #eeeeee;
-      background-repeat: no-repeat;
-      background-position: center center;
-    }
-    :host[small] img[loading], :host[small] img[failed] {
-      height: 80px;
-    }
-    :host[max-height] img[loading], :host[max-height] img[failed] {
-      width: 140px;
-    }
-    :host[small][max-height] img[loading], :host[small][max-height] img[failed] {
-      width: 115px;
-    }
-  </style>
-
   <template>
+    <style>
+      a {
+        display: block;
+      }
+      img {
+        width: 140px;
+      }
+      :host[small] img {
+        width: 115px;
+      }
+      :host[max-height] img {
+        width: auto;
+        height: 100px;
+      }
+      :host[small][max-height] img {
+        height: 80px;
+      }
+      img[loading], img[failed] {
+        height: 100px;
+        background-color: #eeeeee;
+        background-repeat: no-repeat;
+        background-position: center center;
+      }
+      :host[small] img[loading], :host[small] img[failed] {
+        height: 80px;
+      }
+      :host[max-height] img[loading], :host[max-height] img[failed] {
+        width: 140px;
+      }
+      :host[small][max-height] img[loading], :host[small][max-height] img[failed] {
+        width: 115px;
+      }
+    </style>
+
     <a href="[[link(originalUrl, url, status)]]" onclick="return !window.viewImage || window.viewImage(this.href) && false;">
       <img loading$="[[isLoading(status)]]" failed$="[[isFailed(status)]]" src$="[[src]]" style$="[[backgroundImage(status, loadingImage)]]">
     </a>
